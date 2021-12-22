@@ -1,30 +1,30 @@
 
 spring:
   datasource:
-    url: jdbc:sqlserver://localhost:1433;databaseName=master
-    username: sa
-    password: Password1
+    #The DB name cannot contains hyphen character "-", you should use underscore character "_".
+    url: jdbc:mysql://localhost:3307/outbox_pattern_db?useSSL=false
+    username: user
+    password: user
 
-    # This configuration will make Spring Boot start the `schema.sql` file.
-    # Ref: https://docs.spring.io/spring-boot/docs/current/reference/html/howto.html#howto-database-initialization
-    initialization-mode: always
+    #Account for running schema scripts
+    schema-username: root
+    schema-password: root
 
-    # Execute all schema_*.sql when starting the application.
-    # Ref: https://www.baeldung.com/spring-boot-sql-import-files
-#    data: schema_*.sql
+    #The platform for DDL or DML scripts (it's all by default)
+    #    platform: mysql
 
+    #HikariCP: the connection pool framework: http://www.baeldung.com/hikaricp
+    hikari:
+      pool-name: outbox_pattern_db
+
+    driverClassName: com.mysql.cj.jdbc.Driver
   jpa:
-    # Disabled it to avoid unexpected performance issue: https://www.baeldung.com/spring-open-session-in-view
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+      hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+
+    # Avoid accidental performance issue: https://github.com/spring-projects/spring-boot/issues/7107
     open-in-view: false
-    generate-ddl: true
     hibernate:
       ddl-auto: update
-#    #The platform for DDL or DML scripts (it's all by default)
-##    platform: mysql
-#
-#    #HikariCP: the connection pool framework: http://www.baeldung.com/hikaricp
-#    hikari:
-#      pool-name: outbox-pattern
-#
-
-

@@ -1,17 +1,17 @@
 package org.tnmk.outboxpattern.pro01mssql.testinfra.dbtestcontainer;
 
-import org.testcontainers.containers.MSSQLServerContainer;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.containers.wait.strategy.WaitAllStrategy;
+import org.testcontainers.containers.wait.strategy.WaitStrategy;
 
 import java.time.Duration;
 
 public class DBContainerStarter {
-  public static final MSSQLServerContainer DB_CONTAINER = startContainer();
+  public static final MySQLContainer DB_CONTAINER = startContainer();
 
-  private static MSSQLServerContainer startContainer() {
-    MSSQLServerContainer container = new MSSQLServerContainer();
+  private static MySQLContainer startContainer() {
+    MySQLContainer container = new MySQLContainer();
     container
-        .withInitScript("db/init.sql")
-        .withExposedPorts(1430)
         .withStartupTimeout(Duration.ofSeconds(90))
         .start();
     container.start();

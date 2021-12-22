@@ -7,10 +7,11 @@ import org.tnmk.outboxpattern.pro01mssql.datafactory.SampleEntityFactory;
 import org.tnmk.outboxpattern.pro01mssql.entity.SampleEntity;
 import org.tnmk.outboxpattern.pro01mssql.story.SampleStory;
 import org.tnmk.outboxpattern.pro01mssql.testinfra.BaseSpringTest;
+import org.tnmk.outboxpattern.pro01mssql.testinfra.BaseSpringTest_WithTestContainer;
 
 import java.util.Optional;
 
-public class SampleBusinessTest extends BaseSpringTest {
+public class SampleBusinessTest extends BaseSpringTest_WithTestContainer {
   @Autowired
   private SampleStory sampleStory;
 

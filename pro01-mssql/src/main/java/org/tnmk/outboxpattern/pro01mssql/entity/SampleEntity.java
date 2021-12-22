@@ -14,26 +14,26 @@ import java.time.Instant;
 import java.time.ZonedDateTime;
 
 @Entity
-@Table(name = "sample_entity")
+@Table(name = "sample_entity", catalog = "outbox_pattern_db")
 @Data
 public class SampleEntity {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "sample_entity_id")
   private Long id;
 
   private String name;
-
-  @Column(name = "starting_date_time", columnDefinition = "DATETIME")
-  private ZonedDateTime startingDateTime;
-  /**
-   * The columnDefinition here is specific for MS SQL Server only. It won't work with other kinds of DBs such as My SQL, Oracle.
-   */
-  @Column(name = "creation_dateTime", updatable = false, columnDefinition = "datetime2 DEFAULT getdate()")
-  @CreationTimestamp
-  private Instant createdDateTime;
-
-  @Column(name = "update_dateTime")
-  @UpdateTimestamp
-  private ZonedDateTime updateDateTime;
+//
+//  @Column(name = "starting_date_time", columnDefinition = "TIMESTAMP(6)")
+//  private ZonedDateTime startingDateTime;
+//  /**
+//   * The columnDefinition here is specific for MY SQL Server only. It won't work with other kinds of DBs such as DB2, Oracle.
+//   */
+//  @Column(name = "creation_dateTime", updatable = false, columnDefinition = "TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6)")
+//  @CreationTimestamp
+//  private Instant createdDateTime;
+//
+//  @Column(name = "update_dateTime")
+//  @UpdateTimestamp
+//  private ZonedDateTime updateDateTime;
 }

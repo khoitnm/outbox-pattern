@@ -17,7 +17,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <!-- Frameworks -->
-        <springframework.boot.version>2.6.1</springframework.boot.version>
+        <springframework.boot.version>2.1.6.RELEASE</springframework.boot.version>
         <testcontainers.version>1.16.2</testcontainers.version>
         <lombok.version>1.18.16</lombok.version>
         <transactionoutbox-core.version>4.1.230</transactionoutbox-core.version>
@@ -43,28 +43,28 @@
         </dependency>
 
         <!-- MS SQL SERVER DEPENDENCIES -->
-        <dependency>
-            <groupId>com.microsoft.sqlserver</groupId>
-            <artifactId>mssql-jdbc</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>mssqlserver</artifactId>
-            <version>${testcontainers.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- MY SQL -->
 <!--        <dependency>-->
-<!--            <groupId>mysql</groupId>-->
-<!--            <artifactId>mysql-connector-java</artifactId>-->
+<!--            <groupId>com.microsoft.sqlserver</groupId>-->
+<!--            <artifactId>mssql-jdbc</artifactId>-->
 <!--        </dependency>-->
 <!--        <dependency>-->
 <!--            <groupId>org.testcontainers</groupId>-->
-<!--            <artifactId>mysql</artifactId>-->
+<!--            <artifactId>mssqlserver</artifactId>-->
 <!--            <version>${testcontainers.version}</version>-->
 <!--            <scope>test</scope>-->
 <!--        </dependency>-->
+
+        <!-- MY SQL -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>mysql</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
 
          <!-- For equals() and hashCode() -->
         <dependency>
