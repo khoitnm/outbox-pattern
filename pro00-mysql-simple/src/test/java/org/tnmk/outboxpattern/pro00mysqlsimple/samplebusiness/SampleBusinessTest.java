@@ -5,22 +5,21 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tnmk.outboxpattern.pro00mysqlsimple.datafactory.SampleEntityFactory;
 import org.tnmk.outboxpattern.pro00mysqlsimple.entity.SampleEntity;
-import org.tnmk.outboxpattern.pro00mysqlsimple.story.SampleStory;
+import org.tnmk.outboxpattern.pro00mysqlsimple.service.SampleService;
 import org.tnmk.outboxpattern.pro00mysqlsimple.testinfra.BaseSpringTest;
-import org.tnmk.outboxpattern.pro00mysqlsimple.testinfra.BaseSpringTest_WithTestContainer;
 
 import java.util.Optional;
 
 public class SampleBusinessTest extends BaseSpringTest {
   @Autowired
-  private SampleStory sampleStory;
+  private SampleService sampleService;
 
   @Test
   public void test() {
-    SampleEntity sampleEntity = SampleEntityFactory.constructSampleEntity();
-    SampleEntity savedSampleEntity = sampleStory.create(sampleEntity);
+    SampleEntity sampleEntity = SampleEntityFactory.random();
+    SampleEntity savedSampleEntity = sampleService.create(sampleEntity);
 
-    Optional<SampleEntity> sampleEntityOptional = sampleStory.findById(savedSampleEntity.getId());
+    Optional<SampleEntity> sampleEntityOptional = sampleService.findById(savedSampleEntity.getId());
     Assert.assertTrue(sampleEntityOptional.isPresent());
   }
 }

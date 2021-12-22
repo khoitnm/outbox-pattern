@@ -7,19 +7,19 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.tnmk.outboxpattern.pro00mysqlsimple.datafactory.SampleEntityFactory;
 import org.tnmk.outboxpattern.pro00mysqlsimple.entity.SampleEntity;
-import org.tnmk.outboxpattern.pro00mysqlsimple.story.SampleStory;
+import org.tnmk.outboxpattern.pro00mysqlsimple.service.SampleService;
 
 @Slf4j
 @Service
 public class SeedDataStory {
 
   @Autowired
-  private SampleStory sampleStory;
+  private SampleService sampleService;
 
   @EventListener(ApplicationReadyEvent.class)
   public void autoStart() {
-    SampleEntity sampleEntity = SampleEntityFactory.constructSampleEntity();
-    sampleEntity = sampleStory.create(sampleEntity);
+    SampleEntity sampleEntity = SampleEntityFactory.random();
+    sampleEntity = sampleService.create(sampleEntity);
     log.info("SampleEntity: " + sampleEntity);
   }
 }

@@ -30,6 +30,12 @@
     </properties>
 
     <dependencies>
+        <!-- GENERAL WEB -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
         <!-- GENERAL DB DEPENDENCIES -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
