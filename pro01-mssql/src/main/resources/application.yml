@@ -6,13 +6,6 @@ spring:
     username: user
     password: user
 
-    #Account for running schema scripts
-    schema-username: root
-    schema-password: root
-
-    #The platform for DDL or DML scripts (it's all by default)
-    #    platform: mysql
-
     #HikariCP: the connection pool framework: http://www.baeldung.com/hikaricp
     hikari:
       pool-name: outbox_pattern_db
@@ -28,3 +21,11 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: update
+  sql:
+    init:
+      #The platform for DDL or DML scripts (it's all by default)
+      platform: mysql
+
+      #Account for running schema scripts
+      username: root
+      password: root

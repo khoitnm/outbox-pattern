@@ -11,7 +11,7 @@ import org.tnmk.outboxpattern.pro01mssql.testinfra.BaseSpringTest_WithTestContai
 
 import java.util.Optional;
 
-public class SampleBusinessTest extends BaseSpringTest_WithTestContainer {
+public class SampleBusinessTest extends BaseSpringTest {
   @Autowired
   private SampleStory sampleStory;
 

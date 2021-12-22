@@ -23,6 +23,8 @@ public class DBContainerContextInitializer implements ApplicationContextInitiali
         "spring.datasource.url=" + DB_CONTAINER.getJdbcUrl(),
         "spring.datasource.username=" + DB_CONTAINER.getUsername(),
         "spring.datasource.password=" + DB_CONTAINER.getPassword()
+//        "spring.sql.init.username=" + DB_CONTAINER.getPassword(),
+//        "spring.sql.init.password=" + DB_CONTAINER.getPassword()
     ).applyTo(configurableApplicationContext.getEnvironment());
   }
 }
