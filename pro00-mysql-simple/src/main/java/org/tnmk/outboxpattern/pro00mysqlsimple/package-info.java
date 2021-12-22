@@ -1,0 +1,1 @@
+package org.tnmk.outboxpattern.pro00mysqlsimple;

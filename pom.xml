@@ -9,7 +9,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>pro01-mssql</module>
+        <module>pro00-mysql-simple</module>
     </modules>
 
     <properties>
