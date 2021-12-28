@@ -24,4 +24,9 @@ public class SampleStoryRest {
   public List<SampleEntity> triggerOutbox() {
     return outboxPatternService.outboxSuccess();
   }
+
+  @GetMapping("/outbox/nounique/fail")
+  public List<SampleEntity> triggerOutboxFail() {
+    return outboxPatternService.outboxFail();
+  }
 }
