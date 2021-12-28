@@ -8,6 +8,8 @@ import com.gruelbox.transactionoutbox.SpringInstantiator;
 import com.gruelbox.transactionoutbox.SpringTransactionManager;
 import com.gruelbox.transactionoutbox.SpringTransactionOutboxConfiguration;
 import com.gruelbox.transactionoutbox.TransactionOutbox;
+import com.gruelbox.transactionoutbox.TransactionOutboxEntry;
+import com.gruelbox.transactionoutbox.TransactionOutboxListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -23,26 +25,26 @@ public class TransactionalOutboxConfig {
   @Bean
   //  @Lazy
   public TransactionOutbox transactionOutbox(
-      SpringTransactionManager springTransactionManager, SpringInstantiator springInstantiator, Persistor persistor) {
+      SpringTransactionManager springTransactionManager, SpringInstantiator springInstantiator
+      , Persistor persistor
+      , TransactionOutboxListener transactionOutboxListener) {
+
     return TransactionOutbox.builder()
         .instantiator(springInstantiator)
         .transactionManager(springTransactionManager)
         .retentionThreshold(Duration.ofSeconds(5))
+
+        // Flush once every 4 seconds
+        .attemptFrequency(Duration.ofSeconds(4))
         .persistor(persistor)
+
+        // Include Slf4j's Mapped Diagnostic Context in tasks. This means that anything in the MDC when schedule()
+        // is called will be recreated in the task when it runs. Very useful for tracking things like user ids and
+        // request ids across invocations.
+        .serializeMdc(true)
+
+        .listener(transactionOutboxListener)
         .build();
-    //
-    //    return TransactionOutbox.builder()
-    //        .attemptFrequency(transactionalOutboxProperties.getRetrySleepPeriod())
-    //        .blockAfterAttempts(transactionalOutboxProperties.getRetryLimit())
-    //        .initializeImmediately(true)
-    //        .instantiator(springInstantiator)
-    //        .listener(transactionOutboxListener)
-    //        .submitter(transactionOutboxSubmitter)
-    //        .persistor(transactionOutboxPersistor)
-    //        .retentionThreshold(transactionalOutboxProperties.getRetentionPeriod())
-    //        .serializeMdc(true)
-    //        .transactionManager(springTransactionManager)
-    //        .build();
   }
 
   @Bean
@@ -50,7 +52,9 @@ public class TransactionalOutboxConfig {
     return DefaultPersistor.builder()
         // This config must match with Dialect config in application.yml: `hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect`
         .dialect(Dialect.MY_SQL_5)
-        .migrate(false)  // False because migrations are handled separately
+
+        // Disable automatic creation and migration of the outbox table, forcing the application to manage migrations itself.
+        .migrate(false)
         .serializer(DefaultInvocationSerializer.builder()
             .serializableTypes(Set.of(
                 UUID.class,
