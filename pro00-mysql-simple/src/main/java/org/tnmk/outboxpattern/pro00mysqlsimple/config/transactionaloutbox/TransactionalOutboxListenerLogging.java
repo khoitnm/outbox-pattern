@@ -10,16 +10,16 @@ import org.springframework.stereotype.Component;
 public class TransactionalOutboxListenerLogging implements TransactionOutboxListener {
   @Override
   public void scheduled(TransactionOutboxEntry entry) {
-    log.info("Outbox scheduled {}", entry);
+    log.info("OutboxListener: scheduled {}", entry);
   }
 
   @Override
   public void success(TransactionOutboxEntry entry) {
-    log.info("Outbox Success {}", entry);
+    log.info("OutboxListener: success {}", entry);
   }
 
   @Override
   public void blocked(TransactionOutboxEntry entry, Throwable cause) {
-    log.info("Outbox blocked {} because of error {}", entry, cause.getMessage());
+    log.info("OutboxListener: blocked {} because of error {}", entry, cause.getMessage());
   }
 }

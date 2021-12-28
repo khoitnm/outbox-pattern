@@ -8,7 +8,6 @@ import com.gruelbox.transactionoutbox.SpringInstantiator;
 import com.gruelbox.transactionoutbox.SpringTransactionManager;
 import com.gruelbox.transactionoutbox.SpringTransactionOutboxConfiguration;
 import com.gruelbox.transactionoutbox.TransactionOutbox;
-import com.gruelbox.transactionoutbox.TransactionOutboxEntry;
 import com.gruelbox.transactionoutbox.TransactionOutboxListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +26,7 @@ public class TransactionalOutboxConfig {
   public TransactionOutbox transactionOutbox(
       SpringTransactionManager springTransactionManager, SpringInstantiator springInstantiator
       , Persistor persistor
+      , TransactionalOutboxSubmitter submitter
       , TransactionOutboxListener transactionOutboxListener) {
 
     return TransactionOutbox.builder()
@@ -37,7 +37,7 @@ public class TransactionalOutboxConfig {
         // Flush once every 4 seconds
         .attemptFrequency(Duration.ofSeconds(4))
         .persistor(persistor)
-
+        .submitter(submitter)
         // Include Slf4j's Mapped Diagnostic Context in tasks. This means that anything in the MDC when schedule()
         // is called will be recreated in the task when it runs. Very useful for tracking things like user ids and
         // request ids across invocations.
