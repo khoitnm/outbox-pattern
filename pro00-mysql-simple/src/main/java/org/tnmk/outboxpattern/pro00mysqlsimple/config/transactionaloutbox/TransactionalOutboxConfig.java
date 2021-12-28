@@ -12,12 +12,14 @@ import com.gruelbox.transactionoutbox.TransactionOutboxListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.tnmk.outboxpattern.pro00mysqlsimple.entity.SampleEntity;
 
 import java.time.Duration;
 import java.util.Set;
 import java.util.UUID;
 
+@EnableScheduling
 @Import({ SpringTransactionOutboxConfiguration.class }) // This is required for SpringTransactionManager & SpringInstantiator beans
 @Configuration
 public class TransactionalOutboxConfig {
@@ -31,8 +33,9 @@ public class TransactionalOutboxConfig {
 
     return TransactionOutbox.builder()
         .instantiator(springInstantiator)
+        .initializeImmediately(true)
         .transactionManager(springTransactionManager)
-        .retentionThreshold(Duration.ofSeconds(5))
+        .retentionThreshold(Duration.ofSeconds(10))
 
         // Flush once every 4 seconds
         .attemptFrequency(Duration.ofSeconds(4))

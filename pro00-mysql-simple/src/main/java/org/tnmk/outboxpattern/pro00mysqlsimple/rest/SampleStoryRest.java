@@ -25,6 +25,11 @@ public class SampleStoryRest {
     return outboxPatternService.uniqueOutboxFail(outboxId);
   }
 
+  @GetMapping("/outbox/u/{outboxId}/nested-event-fail")
+  public List<SampleEntity> uniqueOutboxNestedEventFail(@PathVariable("outboxId") String outboxId) {
+    return outboxPatternService.uniqueOutboxNestedEventFail(outboxId);
+  }
+
   @GetMapping("/outbox/random/success")
   public List<SampleEntity> outboxSuccess() {
     return outboxPatternService.outboxSuccess();
@@ -33,5 +38,10 @@ public class SampleStoryRest {
   @GetMapping("/outbox/random/fail")
   public List<SampleEntity> outboxFail() {
     return outboxPatternService.outboxFail();
+  }
+
+  @GetMapping("/outbox/random/nested-event-fail")
+  public List<SampleEntity> outboxNestedEventFail() {
+    return outboxPatternService.outboxNestedEventFail();
   }
 }

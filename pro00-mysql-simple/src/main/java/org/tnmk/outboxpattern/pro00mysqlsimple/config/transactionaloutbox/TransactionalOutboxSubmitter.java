@@ -10,9 +10,9 @@ import java.util.function.Consumer;
 @Component
 @Slf4j
 public class TransactionalOutboxSubmitter implements Submitter {
-  @Override public void submit(TransactionOutboxEntry entry, Consumer<TransactionOutboxEntry> localExecutor) {
+  @Override public void submit(TransactionOutboxEntry entry, Consumer<TransactionOutboxEntry> consumer) {
     log.info("OUTBOX SUBMIT: start {}", entry);
-    localExecutor.accept(entry);
+    consumer.accept(entry);
     log.info("OUTBOX SUBMIT: end {}", entry);
   }
 }
