@@ -15,18 +15,23 @@ public class SampleStoryRest {
 
   private final OutboxPatternService outboxPatternService;
 
-  @GetMapping("/outbox/unique/{outboxId}")
-  public List<SampleEntity> triggerOutboxUnqiue(@PathVariable("outboxId") String outboxId) {
+  @GetMapping("/outbox/u/{outboxId}/success")
+  public List<SampleEntity> uniqueOutboxSuccess(@PathVariable("outboxId") String outboxId) {
     return outboxPatternService.uniqueOutboxSuccess(outboxId);
   }
 
-  @GetMapping("/outbox/nounique")
-  public List<SampleEntity> triggerOutbox() {
+  @GetMapping("/outbox/u/{outboxId}/fail")
+  public List<SampleEntity> uniqueOutboxFail(@PathVariable("outboxId") String outboxId) {
+    return outboxPatternService.uniqueOutboxFail(outboxId);
+  }
+
+  @GetMapping("/outbox/random/success")
+  public List<SampleEntity> outboxSuccess() {
     return outboxPatternService.outboxSuccess();
   }
 
-  @GetMapping("/outbox/nounique/fail")
-  public List<SampleEntity> triggerOutboxFail() {
+  @GetMapping("/outbox/random/fail")
+  public List<SampleEntity> outboxFail() {
     return outboxPatternService.outboxFail();
   }
 }
