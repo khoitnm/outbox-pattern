@@ -11,23 +11,29 @@ import javax.transaction.Transactional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class SampleEventService {
+public class EventConsumer {
   private final SampleRepository sampleRepository;
 
-//  @Transactional
-  public SampleEntity createEvent(SampleEntity sampleEvent) {
-    log.info("Start event: {}", sampleEvent);
-    SampleEntity result = sampleRepository.save(sampleEvent);
-    log.info("End event: {}", result);
+  @Transactional
+  public SampleEntity updateSuccess(SampleEntity sampleEvent) {
+    return update(sampleEvent);
+  }
+
+  @Transactional
+  public SampleEntity updateFail(SampleEntity sampleEvent) {
+    SampleEntity result = update(sampleEvent);
+    ExceptionUtils.throwException();
     return result;
   }
 
-//  @Transactional
-  public SampleEntity createEventFail(SampleEntity sampleEvent) {
+  private SampleEntity update(SampleEntity sampleEvent) {
     log.info("Start event: {}", sampleEvent);
+    if (sampleEvent.getId() == null || sampleEvent.getId() == 0) {
+      throw new IllegalArgumentException("Cannot update an entity without Id");
+    }
+    sampleEvent.setName("Edited_" + sampleEvent.getName());
     SampleEntity result = sampleRepository.save(sampleEvent);
     log.info("End event: {}", result);
-    ExceptionUtils.throwException();
     return result;
   }
 }

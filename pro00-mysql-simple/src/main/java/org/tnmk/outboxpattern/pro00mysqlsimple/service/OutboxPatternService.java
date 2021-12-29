@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.tnmk.outboxpattern.pro00mysqlsimple.datafactory.SampleEntityFactory;
 import org.tnmk.outboxpattern.pro00mysqlsimple.entity.SampleEntity;
+import org.tnmk.outboxpattern.pro00mysqlsimple.repository.SampleRepository;
 
 import javax.transaction.Transactional;
 import java.time.ZonedDateTime;
@@ -19,23 +20,22 @@ import static org.tnmk.outboxpattern.pro00mysqlsimple.service.ExceptionUtils.thr
 @Slf4j
 public class OutboxPatternService {
   private final TransactionOutbox transactionOutbox;
-  private final SampleDataService sampleDataService;
+  private final SampleRepository sampleRepository;
 
   // Must have @Transactional. Otherwise, we'll get error "com.gruelbox.transactionoutbox.NoTransactionActiveException: null"
   @Transactional
   public List<SampleEntity> uniqueOutboxSuccess(String outboxUniqueId) {
-    String now = ZonedDateTime.now().toString();
+    String now = formatCurrentDateTime();
     SampleEntity sampleEntity = SampleEntityFactory.withName("Entity_" + now);
     log.info("uniqueOutboxSuccess - start entity: {}", sampleEntity);
-    SampleEntity sampleEntityResult = sampleDataService.create(sampleEntity);
+    SampleEntity sampleEntityResult = sampleRepository.save(sampleEntity);
 
-    SampleEntity sampleEvent = SampleEntityFactory.withName("Event_" + now);
-    log.info("uniqueOutboxSuccess - start event: {}", sampleEvent);
+    log.info("uniqueOutboxSuccess - start event: {}", sampleEntityResult);
 
     SampleEntity sampleEventResult = transactionOutbox.with()
         .uniqueRequestId(outboxUniqueId)
-        .schedule(SampleEventService.class)
-        .createEvent(sampleEvent);
+        .schedule(EventConsumer.class)
+        .updateSuccess(sampleEntityResult);
 
     List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
     log.info("uniqueOutboxSuccess - end: {}", result);
@@ -45,18 +45,17 @@ public class OutboxPatternService {
   // Must have @Transactional. Otherwise, we'll get error "com.gruelbox.transactionoutbox.NoTransactionActiveException: null"
   @Transactional
   public List<SampleEntity> uniqueOutboxFail(String outboxUniqueId) {
-    String now = ZonedDateTime.now().toString();
+    String now = formatCurrentDateTime();
     SampleEntity sampleEntity = SampleEntityFactory.withName("Entity_" + now);
     log.info("uniqueOutboxFail - start entity: {}", sampleEntity);
-    SampleEntity sampleEntityResult = sampleDataService.create(sampleEntity);
+    SampleEntity sampleEntityResult = sampleRepository.save(sampleEntity);
 
-    SampleEntity sampleEvent = SampleEntityFactory.withName("Event_" + now);
-    log.info("uniqueOutboxFail - start event: {}", sampleEvent);
+    log.info("uniqueOutboxFail - start event: {}", sampleEntityResult);
 
     SampleEntity sampleEventResult = transactionOutbox.with()
         .uniqueRequestId(outboxUniqueId)
-        .schedule(SampleEventService.class)
-        .createEvent(sampleEvent);
+        .schedule(EventConsumer.class)
+        .updateSuccess(sampleEntityResult);
 
     List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
     log.info("uniqueOutboxFail - end with an exception: {}", result);
@@ -67,18 +66,17 @@ public class OutboxPatternService {
   // Must have @Transactional. Otherwise, we'll get error "com.gruelbox.transactionoutbox.NoTransactionActiveException: null"
   @Transactional
   public List<SampleEntity> uniqueOutboxNestedEventFail(String outboxUniqueId) {
-    String now = ZonedDateTime.now().toString();
+    String now = formatCurrentDateTime();
     SampleEntity sampleEntity = SampleEntityFactory.withName("Entity_" + now);
     log.info("uniqueOutboxNestedEventFail - start entity: {}", sampleEntity);
-    SampleEntity sampleEntityResult = sampleDataService.create(sampleEntity);
+    SampleEntity sampleEntityResult = sampleRepository.save(sampleEntity);
 
-    SampleEntity sampleEvent = SampleEntityFactory.withName("Event_" + now);
-    log.info("uniqueOutboxNestedEventFail - start event: {}", sampleEvent);
+    log.info("uniqueOutboxNestedEventFail - start event: {}", sampleEntityResult);
 
     SampleEntity sampleEventResult = transactionOutbox.with()
         .uniqueRequestId(outboxUniqueId)
-        .schedule(SampleEventService.class)
-        .createEventFail(sampleEvent);
+        .schedule(EventConsumer.class)
+        .updateFail(sampleEntityResult);
 
     List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
     log.info("uniqueOutboxNestedEventFail - end: {}", result);
@@ -88,17 +86,16 @@ public class OutboxPatternService {
   // Must have @Transactional. Otherwise, we'll get error "com.gruelbox.transactionoutbox.NoTransactionActiveException: null"
   @Transactional
   public List<SampleEntity> outboxSuccess() {
-    String now = ZonedDateTime.now().toString();
+    String now = formatCurrentDateTime();
     SampleEntity sampleEntity = SampleEntityFactory.withName("Entity_" + now);
     log.info("outboxSuccess - start entity: {}", sampleEntity);
-    SampleEntity sampleEntityResult = sampleDataService.create(sampleEntity);
+    SampleEntity sampleEntityResult = sampleRepository.save(sampleEntity);
 
-    SampleEntity sampleEvent = SampleEntityFactory.withName("Event_" + now);
-    log.info("outboxSuccess - start event: {}", sampleEvent);
+    log.info("outboxSuccess - start event: {}", sampleEntityResult);
 
     SampleEntity sampleEventResult = transactionOutbox.with()
-        .schedule(SampleEventService.class)
-        .createEvent(sampleEvent);
+        .schedule(EventConsumer.class)
+        .updateSuccess(sampleEntityResult);
 
     List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
     log.info("outboxSuccess - finish: {}", result);
@@ -108,17 +105,16 @@ public class OutboxPatternService {
   // Must have @Transactional. Otherwise, we'll get error "com.gruelbox.transactionoutbox.NoTransactionActiveException: null"
   @Transactional
   public List<SampleEntity> outboxFail() {
-    String now = ZonedDateTime.now().toString();
+    String now = formatCurrentDateTime();
     SampleEntity sampleEntity = SampleEntityFactory.withName("Entity_" + now);
     log.info("outboxFail - start entity: {}", sampleEntity);
-    SampleEntity sampleEntityResult = sampleDataService.create(sampleEntity);
+    SampleEntity sampleEntityResult = sampleRepository.save(sampleEntity);
 
-    SampleEntity sampleEvent = SampleEntityFactory.withName("Event_" + now);
-    log.info("outboxFail - start event: {}", sampleEvent);
+    log.info("outboxFail - start event: {}", sampleEntityResult);
 
     SampleEntity sampleEventResult = transactionOutbox.with()
-        .schedule(SampleEventService.class)
-        .createEvent(sampleEvent);
+        .schedule(EventConsumer.class)
+        .updateSuccess(sampleEntityResult);
 
     List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
     log.info("outboxFail - end with an exception: {}", result);
@@ -129,20 +125,22 @@ public class OutboxPatternService {
   // Must have @Transactional. Otherwise, we'll get error "com.gruelbox.transactionoutbox.NoTransactionActiveException: null"
   @Transactional
   public List<SampleEntity> outboxNestedEventFail() {
-    String now = ZonedDateTime.now().toString();
+    String now = formatCurrentDateTime();
     SampleEntity sampleEntity = SampleEntityFactory.withName("Entity_" + now);
     log.info("outboxFail - start entity: {}", sampleEntity);
-    SampleEntity sampleEntityResult = sampleDataService.create(sampleEntity);
+    SampleEntity sampleEntityResult = sampleRepository.save(sampleEntity);
 
-    SampleEntity sampleEvent = SampleEntityFactory.withName("Event_" + now);
-    log.info("outboxFail - start event: {}", sampleEvent);
-
+    log.info("outboxFail - start event: {}", sampleEntityResult);
     SampleEntity sampleEventResult = transactionOutbox.with()
-        .schedule(SampleEventService.class)
-        .createEventFail(sampleEvent);
+        .schedule(EventConsumer.class)
+        .updateFail(sampleEntityResult);
 
     List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
     log.info("outboxFail - end with an exception: {}", result);
     return result;
+  }
+
+  private String formatCurrentDateTime() {
+    return ZonedDateTime.now().toString();
   }
 }
