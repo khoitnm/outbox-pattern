@@ -24,7 +24,7 @@ public class TransactionalOutboxBackgroundWorker {
   /**
    * Scheduled job to poll the transaction-outbox table for tasks to retry.
    */
-  @Scheduled(cron = "* */10 * * * *")
+  @Scheduled(fixedDelay = 20000)
   public void flushTransactionOutbox() {
     log.trace("Beginning transaction-outbox flush");
     try {

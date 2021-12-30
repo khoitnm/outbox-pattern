@@ -35,7 +35,7 @@ public class TransactionalOutboxConfig {
         .instantiator(springInstantiator)
         .initializeImmediately(true)
         .transactionManager(springTransactionManager)
-        .retentionThreshold(Duration.ofSeconds(10))
+        .retentionThreshold(Duration.ofSeconds(0))
 
         // Flush once every 4 seconds
         .attemptFrequency(Duration.ofSeconds(4))
