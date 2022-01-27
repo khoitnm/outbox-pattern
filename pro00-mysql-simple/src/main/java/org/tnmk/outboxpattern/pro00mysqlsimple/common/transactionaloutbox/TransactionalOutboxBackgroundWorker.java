@@ -35,7 +35,7 @@ public class TransactionalOutboxBackgroundWorker {
    *  │ │ │ │ │ │
    *  * * * * * *
    */
-  @Scheduled(cron = "*/15 * * * * *") // every 15 seconds.
+  @Scheduled(cron = "*/15 * * * * *") // start at first second of every minute (== every minute)
   public void flushTransactionOutbox() {
     log.trace("Beginning transaction-outbox flush");
     try {
