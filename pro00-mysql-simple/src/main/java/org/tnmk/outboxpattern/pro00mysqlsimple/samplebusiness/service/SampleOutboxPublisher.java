@@ -1,30 +1,30 @@
-package org.tnmk.outboxpattern.pro00mysqlsimple.service;
+package org.tnmk.outboxpattern.pro00mysqlsimple.samplebusiness.service;
 
 import com.gruelbox.transactionoutbox.TransactionOutbox;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.tnmk.outboxpattern.pro00mysqlsimple.datafactory.SampleEntityFactory;
-import org.tnmk.outboxpattern.pro00mysqlsimple.entity.SampleEntity;
-import org.tnmk.outboxpattern.pro00mysqlsimple.repository.SampleRepository;
+import org.tnmk.outboxpattern.pro00mysqlsimple.samplebusiness.datafactory.SampleEntityFactory;
+import org.tnmk.outboxpattern.pro00mysqlsimple.samplebusiness.entity.SampleEntity;
+import org.tnmk.outboxpattern.pro00mysqlsimple.samplebusiness.repository.SampleRepository;
 
 import javax.transaction.Transactional;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.tnmk.outboxpattern.pro00mysqlsimple.service.ExceptionUtils.throwAnException;
+import static org.tnmk.outboxpattern.pro00mysqlsimple.samplebusiness.service.ExceptionUtils.throwAnException;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class OutboxPublisher {
+public class SampleOutboxPublisher {
   private final TransactionOutbox transactionOutbox;
   private final SampleRepository sampleRepository;
 
   // Must have @Transactional. Otherwise, we'll get error "com.gruelbox.transactionoutbox.NoTransactionActiveException: null"
   @Transactional
-  public List<SampleEntity> unique_publishSuccess_and_consumeSuccess(String outboxUniqueId) {
+  public List<SampleEntity> unique_allSuccess(String outboxUniqueId) {
     String now = formatCurrentDateTime();
     SampleEntity sampleEntity = SampleEntityFactory.withName("Entity_" + now);
     log.info("uniqueOutboxSuccess - start entity: {}", sampleEntity);
@@ -34,7 +34,7 @@ public class OutboxPublisher {
 
     SampleEntity sampleEventResult = transactionOutbox.with()
         .uniqueRequestId(outboxUniqueId)
-        .schedule(OutboxConsumer.class)
+        .schedule(SampleOutboxConsumer.class)
         .updateSuccess(sampleEntityResult);
 
     List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
@@ -54,7 +54,7 @@ public class OutboxPublisher {
 
     SampleEntity sampleEventResult = transactionOutbox.with()
         .uniqueRequestId(outboxUniqueId)
-        .schedule(OutboxConsumer.class)
+        .schedule(SampleOutboxConsumer.class)
         .updateSuccess(sampleEntityResult);
 
     List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
@@ -75,7 +75,7 @@ public class OutboxPublisher {
 
     SampleEntity sampleEventResult = transactionOutbox.with()
         .uniqueRequestId(outboxUniqueId)
-        .schedule(OutboxConsumer.class)
+        .schedule(SampleOutboxConsumer.class)
         .updateFail(sampleEntityResult);
 
     List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
@@ -85,7 +85,7 @@ public class OutboxPublisher {
 
   // Must have @Transactional. Otherwise, we'll get error "com.gruelbox.transactionoutbox.NoTransactionActiveException: null"
   @Transactional
-  public List<SampleEntity> noUnique_publishSuccess_and_consumeSuccess() {
+  public List<SampleEntity> noUnique_allSuccess() {
     String now = formatCurrentDateTime();
     SampleEntity sampleEntity = SampleEntityFactory.withName("Entity_" + now);
     log.info("outboxSuccess - start entity: {}", sampleEntity);
@@ -94,7 +94,7 @@ public class OutboxPublisher {
     log.info("outboxSuccess - start event: {}", sampleEntityResult);
 
     SampleEntity sampleEventResult = transactionOutbox.with()
-        .schedule(OutboxConsumer.class)
+        .schedule(SampleOutboxConsumer.class)
         .updateSuccess(sampleEntityResult);
 
     List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
@@ -104,7 +104,7 @@ public class OutboxPublisher {
 
   // Must have @Transactional. Otherwise, we'll get error "com.gruelbox.transactionoutbox.NoTransactionActiveException: null"
   @Transactional
-  public List<SampleEntity> noUnique_publishError_and_consumeNoError() {
+  public List<SampleEntity> noUnique_publishError() {
     String now = formatCurrentDateTime();
     SampleEntity sampleEntity = SampleEntityFactory.withName("Entity_" + now);
     log.info("outboxFail - start entity: {}", sampleEntity);
@@ -113,7 +113,7 @@ public class OutboxPublisher {
     log.info("outboxFail - start event: {}", sampleEntityResult);
 
     SampleEntity sampleEventResult = transactionOutbox.with()
-        .schedule(OutboxConsumer.class)
+        .schedule(SampleOutboxConsumer.class)
         .updateSuccess(sampleEntityResult);
 
     List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
@@ -124,7 +124,7 @@ public class OutboxPublisher {
 
   // Must have @Transactional. Otherwise, we'll get error "com.gruelbox.transactionoutbox.NoTransactionActiveException: null"
   @Transactional
-  public List<SampleEntity> noUnique_publishSuccess_and_consumeError() {
+  public List<SampleEntity> noUnique_consumeError() {
     String now = formatCurrentDateTime();
     SampleEntity sampleEntity = SampleEntityFactory.withName("Entity_" + now);
     log.info("outboxFail - start entity: {}", sampleEntity);
@@ -132,7 +132,7 @@ public class OutboxPublisher {
 
     log.info("outboxFail - start event: {}", sampleEntityResult);
     SampleEntity sampleEventResult = transactionOutbox.with()
-        .schedule(OutboxConsumer.class)
+        .schedule(SampleOutboxConsumer.class)
         .updateFail(sampleEntityResult);
 
     List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);

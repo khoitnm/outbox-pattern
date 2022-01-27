@@ -1,6 +1,6 @@
-package org.tnmk.outboxpattern.pro00mysqlsimple.datafactory;
+package org.tnmk.outboxpattern.pro00mysqlsimple.samplebusiness.datafactory;
 
-import org.tnmk.outboxpattern.pro00mysqlsimple.entity.SampleEntity;
+import org.tnmk.outboxpattern.pro00mysqlsimple.samplebusiness.entity.SampleEntity;
 
 public class SampleEntityFactory {
   public static SampleEntity random() {

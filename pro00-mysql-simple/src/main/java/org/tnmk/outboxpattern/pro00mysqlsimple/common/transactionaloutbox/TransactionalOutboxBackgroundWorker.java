@@ -1,4 +1,4 @@
-package org.tnmk.outboxpattern.pro00mysqlsimple.config.transactionaloutbox;
+package org.tnmk.outboxpattern.pro00mysqlsimple.common.transactionaloutbox;
 
 import com.gruelbox.transactionoutbox.TransactionOutbox;
 import lombok.AllArgsConstructor;

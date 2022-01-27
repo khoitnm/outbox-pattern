@@ -1,4 +1,4 @@
-package org.tnmk.outboxpattern.pro00mysqlsimple.service;
+package org.tnmk.outboxpattern.pro00mysqlsimple.samplebusiness.service;
 
 public interface ExceptionUtils {
   static void throwAnException() {

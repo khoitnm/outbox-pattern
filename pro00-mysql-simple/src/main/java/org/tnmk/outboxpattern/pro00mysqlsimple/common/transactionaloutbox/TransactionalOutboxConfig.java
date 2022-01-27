@@ -1,4 +1,4 @@
-package org.tnmk.outboxpattern.pro00mysqlsimple.config.transactionaloutbox;
+package org.tnmk.outboxpattern.pro00mysqlsimple.common.transactionaloutbox;
 
 import com.gruelbox.transactionoutbox.DefaultInvocationSerializer;
 import com.gruelbox.transactionoutbox.DefaultPersistor;
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.tnmk.outboxpattern.pro00mysqlsimple.entity.SampleEntity;
+import org.tnmk.outboxpattern.pro00mysqlsimple.samplebusiness.entity.SampleEntity;
 
 import java.time.Duration;
 import java.util.Set;

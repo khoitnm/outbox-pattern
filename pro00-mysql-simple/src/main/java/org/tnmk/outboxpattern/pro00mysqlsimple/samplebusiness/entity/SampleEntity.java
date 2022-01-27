@@ -1,4 +1,4 @@
-package org.tnmk.outboxpattern.pro00mysqlsimple.entity;
+package org.tnmk.outboxpattern.pro00mysqlsimple.samplebusiness.entity;
 
 import lombok.Data;
 
