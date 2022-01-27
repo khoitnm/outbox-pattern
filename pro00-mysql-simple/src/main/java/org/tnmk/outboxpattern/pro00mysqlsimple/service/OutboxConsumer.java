@@ -11,7 +11,7 @@ import javax.transaction.Transactional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class EventConsumer {
+public class OutboxConsumer {
   private final SampleRepository sampleRepository;
 
   @Transactional
@@ -22,7 +22,7 @@ public class EventConsumer {
   @Transactional
   public SampleEntity updateFail(SampleEntity sampleEvent) {
     SampleEntity result = update(sampleEvent);
-    ExceptionUtils.throwException();
+    ExceptionUtils.throwAnException();
     return result;
   }
 

@@ -17,7 +17,10 @@ public class TransactionalOutboxListenerLogging implements TransactionOutboxList
   public void success(TransactionOutboxEntry entry) {
     log.info("OutboxListener: success {}", entry);
   }
-
+  @Override
+  public void failure(TransactionOutboxEntry entry, Throwable cause) {
+    log.info("OutboxListener: failure {}", entry);
+  }
   @Override
   public void blocked(TransactionOutboxEntry entry, Throwable cause) {
     log.info("OutboxListener: blocked {} because of error {}", entry, cause.getMessage());

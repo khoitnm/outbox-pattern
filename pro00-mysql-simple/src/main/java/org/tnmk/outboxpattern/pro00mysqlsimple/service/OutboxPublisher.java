@@ -13,18 +13,18 @@ import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.tnmk.outboxpattern.pro00mysqlsimple.service.ExceptionUtils.throwException;
+import static org.tnmk.outboxpattern.pro00mysqlsimple.service.ExceptionUtils.throwAnException;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class OutboxPatternService {
+public class OutboxPublisher {
   private final TransactionOutbox transactionOutbox;
   private final SampleRepository sampleRepository;
 
   // Must have @Transactional. Otherwise, we'll get error "com.gruelbox.transactionoutbox.NoTransactionActiveException: null"
   @Transactional
-  public List<SampleEntity> uniqueOutboxSuccess(String outboxUniqueId) {
+  public List<SampleEntity> unique_publishSuccess_and_consumeSuccess(String outboxUniqueId) {
     String now = formatCurrentDateTime();
     SampleEntity sampleEntity = SampleEntityFactory.withName("Entity_" + now);
     log.info("uniqueOutboxSuccess - start entity: {}", sampleEntity);
@@ -34,7 +34,7 @@ public class OutboxPatternService {
 
     SampleEntity sampleEventResult = transactionOutbox.with()
         .uniqueRequestId(outboxUniqueId)
-        .schedule(EventConsumer.class)
+        .schedule(OutboxConsumer.class)
         .updateSuccess(sampleEntityResult);
 
     List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
@@ -44,7 +44,7 @@ public class OutboxPatternService {
 
   // Must have @Transactional. Otherwise, we'll get error "com.gruelbox.transactionoutbox.NoTransactionActiveException: null"
   @Transactional
-  public List<SampleEntity> uniqueOutboxFail(String outboxUniqueId) {
+  public List<SampleEntity> unique_publishError(String outboxUniqueId) {
     String now = formatCurrentDateTime();
     SampleEntity sampleEntity = SampleEntityFactory.withName("Entity_" + now);
     log.info("uniqueOutboxFail - start entity: {}", sampleEntity);
@@ -54,18 +54,18 @@ public class OutboxPatternService {
 
     SampleEntity sampleEventResult = transactionOutbox.with()
         .uniqueRequestId(outboxUniqueId)
-        .schedule(EventConsumer.class)
+        .schedule(OutboxConsumer.class)
         .updateSuccess(sampleEntityResult);
 
     List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
     log.info("uniqueOutboxFail - end with an exception: {}", result);
-    throwException();
+    throwAnException();
     return result;
   }
 
   // Must have @Transactional. Otherwise, we'll get error "com.gruelbox.transactionoutbox.NoTransactionActiveException: null"
   @Transactional
-  public List<SampleEntity> uniqueOutboxNestedEventFail(String outboxUniqueId) {
+  public List<SampleEntity> unique_consumeError(String outboxUniqueId) {
     String now = formatCurrentDateTime();
     SampleEntity sampleEntity = SampleEntityFactory.withName("Entity_" + now);
     log.info("uniqueOutboxNestedEventFail - start entity: {}", sampleEntity);
@@ -75,7 +75,7 @@ public class OutboxPatternService {
 
     SampleEntity sampleEventResult = transactionOutbox.with()
         .uniqueRequestId(outboxUniqueId)
-        .schedule(EventConsumer.class)
+        .schedule(OutboxConsumer.class)
         .updateFail(sampleEntityResult);
 
     List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
@@ -85,7 +85,7 @@ public class OutboxPatternService {
 
   // Must have @Transactional. Otherwise, we'll get error "com.gruelbox.transactionoutbox.NoTransactionActiveException: null"
   @Transactional
-  public List<SampleEntity> outboxSuccess() {
+  public List<SampleEntity> noUnique_publishSuccess_and_consumeSuccess() {
     String now = formatCurrentDateTime();
     SampleEntity sampleEntity = SampleEntityFactory.withName("Entity_" + now);
     log.info("outboxSuccess - start entity: {}", sampleEntity);
@@ -94,7 +94,7 @@ public class OutboxPatternService {
     log.info("outboxSuccess - start event: {}", sampleEntityResult);
 
     SampleEntity sampleEventResult = transactionOutbox.with()
-        .schedule(EventConsumer.class)
+        .schedule(OutboxConsumer.class)
         .updateSuccess(sampleEntityResult);
 
     List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
@@ -104,7 +104,7 @@ public class OutboxPatternService {
 
   // Must have @Transactional. Otherwise, we'll get error "com.gruelbox.transactionoutbox.NoTransactionActiveException: null"
   @Transactional
-  public List<SampleEntity> outboxFail() {
+  public List<SampleEntity> noUnique_publishError_and_consumeNoError() {
     String now = formatCurrentDateTime();
     SampleEntity sampleEntity = SampleEntityFactory.withName("Entity_" + now);
     log.info("outboxFail - start entity: {}", sampleEntity);
@@ -113,18 +113,18 @@ public class OutboxPatternService {
     log.info("outboxFail - start event: {}", sampleEntityResult);
 
     SampleEntity sampleEventResult = transactionOutbox.with()
-        .schedule(EventConsumer.class)
+        .schedule(OutboxConsumer.class)
         .updateSuccess(sampleEntityResult);
 
     List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
     log.info("outboxFail - end with an exception: {}", result);
-    throwException();
+    throwAnException();
     return result;
   }
 
   // Must have @Transactional. Otherwise, we'll get error "com.gruelbox.transactionoutbox.NoTransactionActiveException: null"
   @Transactional
-  public List<SampleEntity> outboxNestedEventFail() {
+  public List<SampleEntity> noUnique_publishSuccess_and_consumeError() {
     String now = formatCurrentDateTime();
     SampleEntity sampleEntity = SampleEntityFactory.withName("Entity_" + now);
     log.info("outboxFail - start entity: {}", sampleEntity);
@@ -132,7 +132,7 @@ public class OutboxPatternService {
 
     log.info("outboxFail - start event: {}", sampleEntityResult);
     SampleEntity sampleEventResult = transactionOutbox.with()
-        .schedule(EventConsumer.class)
+        .schedule(OutboxConsumer.class)
         .updateFail(sampleEntityResult);
 
     List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);

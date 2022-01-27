@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.tnmk.outboxpattern.pro00mysqlsimple.entity.SampleEntity;
-import org.tnmk.outboxpattern.pro00mysqlsimple.service.OutboxPatternService;
+import org.tnmk.outboxpattern.pro00mysqlsimple.service.OutboxPublisher;
 
 import java.util.List;
 
@@ -13,35 +13,35 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SampleStoryRest {
 
-  private final OutboxPatternService outboxPatternService;
+  private final OutboxPublisher outboxPublisher;
 
-  @GetMapping("/outbox/u/{outboxId}/success")
-  public List<SampleEntity> uniqueOutboxSuccess(@PathVariable("outboxId") String outboxId) {
-    return outboxPatternService.uniqueOutboxSuccess(outboxId);
+  @GetMapping("/outbox/unique/{outboxId}/all/success")
+  public List<SampleEntity> unique_allSuccess(@PathVariable("outboxId") String outboxId) {
+    return outboxPublisher.unique_publishSuccess_and_consumeSuccess(outboxId);
   }
 
-  @GetMapping("/outbox/u/{outboxId}/fail")
-  public List<SampleEntity> uniqueOutboxFail(@PathVariable("outboxId") String outboxId) {
-    return outboxPatternService.uniqueOutboxFail(outboxId);
+  @GetMapping("/outbox/unique/{outboxId}/publish/error")
+  public List<SampleEntity> unique_publishError(@PathVariable("outboxId") String outboxId) {
+    return outboxPublisher.unique_publishError(outboxId);
   }
 
-  @GetMapping("/outbox/u/{outboxId}/nested-event-fail")
-  public List<SampleEntity> uniqueOutboxNestedEventFail(@PathVariable("outboxId") String outboxId) {
-    return outboxPatternService.uniqueOutboxNestedEventFail(outboxId);
+  @GetMapping("/outbox/unique/{outboxId}/consume/error")
+  public List<SampleEntity> unique_consumeError(@PathVariable("outboxId") String outboxId) {
+    return outboxPublisher.unique_consumeError(outboxId);
   }
 
-  @GetMapping("/outbox/random/success")
-  public List<SampleEntity> outboxSuccess() {
-    return outboxPatternService.outboxSuccess();
+  @GetMapping("/outbox/no-unique/all/success")
+  public List<SampleEntity> noUnique_allSuccess() {
+    return outboxPublisher.noUnique_publishSuccess_and_consumeSuccess();
   }
 
-  @GetMapping("/outbox/random/fail")
-  public List<SampleEntity> outboxFail() {
-    return outboxPatternService.outboxFail();
+  @GetMapping("/outbox/no-unique/publish/error")
+  public List<SampleEntity> noUnique_publishError() {
+    return outboxPublisher.noUnique_publishError_and_consumeNoError();
   }
 
-  @GetMapping("/outbox/random/nested-event-fail")
-  public List<SampleEntity> outboxNestedEventFail() {
-    return outboxPatternService.outboxNestedEventFail();
+  @GetMapping("/outbox/no-unique/consume/error")
+  public List<SampleEntity> noUnique_consumeError() {
+    return outboxPublisher.noUnique_publishSuccess_and_consumeError();
   }
 }
