@@ -22,8 +22,14 @@ public class TransactionalOutboxSubmitter implements Submitter {
 
     // Only delete if success. Otherwise, just keep outbox entry so that it could be retried.
     if (entry.isProcessed()) {
-      log.info("OutboxSubmitter.submit(): delete entryId {}", entry.getId());
-      outboxRepository.deleteById(entry.getId());
+      try {
+        log.info("OutboxSubmitter.submit(): delete entryId {}", entry.getId());
+        outboxRepository.deleteById(entry.getId());
+      } catch (Exception ex) {
+        log.warn("OutboxSubmitter.submit(): cannot delete entryId {}. "
+            + "However, the process will be continued and it will be cleaned up in the next scheduled run of TransactionalOutboxWorker."
+            + "Root cause: {}", entry.getId(), ex.getMessage(), ex);
+      }
     }
     log.info("OutboxSubmitter.submit(): end {}", entry);
 
