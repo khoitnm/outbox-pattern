@@ -8,7 +8,7 @@ import org.jboss.logging.MDC;
 import org.springframework.stereotype.Component;
 import org.tnmk.outboxpattern.pro00mysqlsimple.common.outbox.OutboxRepository;
 import org.tnmk.outboxpattern.pro00mysqlsimple.common.utils.MdcUtils;
-import org.tnmk.outboxpattern.pro00mysqlsimple.samplebusiness.service.MdcConstant;
+import org.tnmk.outboxpattern.pro00mysqlsimple.samplebusiness.service.MdcConstants;
 
 import java.util.function.Consumer;
 
@@ -49,16 +49,16 @@ public class TransactionalOutboxSubmitter implements Submitter {
   }
 
   private void addEntryIdToMdcContext(TransactionOutboxEntry entry) {
-    MdcUtils.putValueIfNotBlank(MdcConstant.OUTBOX_ID, entry.getId());
-    MdcUtils.putValueIfNotBlank(MdcConstant.OUTBOX_UNIQUE_REQUEST_ID, entry.getUniqueRequestId());
-    MdcUtils.putValueIfNotBlank(MdcConstant.OUTBOX_CLASS, entry.getInvocation().getClassName());
-    MdcUtils.putValueIfNotBlank(MdcConstant.OUTBOX_METHOD, entry.getInvocation().getMethodName());
+    MdcUtils.putValueIfNotBlank(MdcConstants.OUTBOX_ID, entry.getId());
+    MdcUtils.putValueIfNotBlank(MdcConstants.OUTBOX_UNIQUE_REQUEST_ID, entry.getUniqueRequestId());
+    MdcUtils.putValueIfNotBlank(MdcConstants.OUTBOX_CLASS, entry.getInvocation().getClassName());
+    MdcUtils.putValueIfNotBlank(MdcConstants.OUTBOX_METHOD, entry.getInvocation().getMethodName());
   }
 
   private void removeEntryIdFromMdcContext() {
-    MDC.remove(MdcConstant.OUTBOX_UNIQUE_REQUEST_ID);
-    MDC.remove(MdcConstant.OUTBOX_ID);
-    MDC.remove(MdcConstant.OUTBOX_CLASS);
-    MDC.remove(MdcConstant.OUTBOX_METHOD);
+    MDC.remove(MdcConstants.OUTBOX_UNIQUE_REQUEST_ID);
+    MDC.remove(MdcConstants.OUTBOX_ID);
+    MDC.remove(MdcConstants.OUTBOX_CLASS);
+    MDC.remove(MdcConstants.OUTBOX_METHOD);
   }
 }

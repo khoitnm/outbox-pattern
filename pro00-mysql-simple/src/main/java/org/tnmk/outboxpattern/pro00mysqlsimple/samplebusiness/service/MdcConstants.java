@@ -1,6 +1,6 @@
 package org.tnmk.outboxpattern.pro00mysqlsimple.samplebusiness.service;
 
-public interface MdcConstant {
+public interface MdcConstants {
   String OUTBOX_CLASS = "outbox_class";
   String OUTBOX_METHOD = "outbox_method";
   /**
