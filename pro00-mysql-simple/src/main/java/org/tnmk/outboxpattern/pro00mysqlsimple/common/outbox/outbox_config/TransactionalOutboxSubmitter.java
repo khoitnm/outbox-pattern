@@ -20,8 +20,11 @@ public class TransactionalOutboxSubmitter implements Submitter {
     log.info("OutboxSubmitter.submit(): start {}", entry);
     consumer.accept(entry);
 
-    log.info("OutboxSubmitter.submit(): delete entryId {}", entry.getId());
-    outboxRepository.deleteById(entry.getId());
+    // Only delete if success. Otherwise, just keep outbox entry so that it could be retried.
+    if (entry.isProcessed()) {
+      log.info("OutboxSubmitter.submit(): delete entryId {}", entry.getId());
+      outboxRepository.deleteById(entry.getId());
+    }
     log.info("OutboxSubmitter.submit(): end {}", entry);
 
   }
