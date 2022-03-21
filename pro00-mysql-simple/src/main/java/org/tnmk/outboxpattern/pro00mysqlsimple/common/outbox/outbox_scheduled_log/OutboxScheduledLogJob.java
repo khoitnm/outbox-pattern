@@ -1,9 +1,10 @@
-package org.tnmk.outboxpattern.pro00mysqlsimple.common.outbox_scheduled_log;
+package org.tnmk.outboxpattern.pro00mysqlsimple.common.outbox.outbox_scheduled_log;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.tnmk.outboxpattern.pro00mysqlsimple.common.outbox.OutboxRepository;
 
 import java.util.List;
 

@@ -3,7 +3,7 @@ package org.tnmk.outboxpattern.pro00mysqlsimple.samplebusiness.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.tnmk.outboxpattern.pro00mysqlsimple.common.outbox_config.TransactionalOutboxBackgroundWorker;
+import org.tnmk.outboxpattern.pro00mysqlsimple.common.outbox.outbox_config.TransactionalOutboxBackgroundWorker;
 import org.tnmk.outboxpattern.pro00mysqlsimple.samplebusiness.entity.SampleEntity;
 import org.tnmk.outboxpattern.pro00mysqlsimple.samplebusiness.repository.SampleRepository;
 
