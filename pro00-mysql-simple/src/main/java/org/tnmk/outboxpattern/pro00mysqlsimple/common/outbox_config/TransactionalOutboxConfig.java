@@ -1,4 +1,4 @@
-package org.tnmk.outboxpattern.pro00mysqlsimple.common.transactionaloutbox;
+package org.tnmk.outboxpattern.pro00mysqlsimple.common.outbox_config;
 
 import com.gruelbox.transactionoutbox.DefaultInvocationSerializer;
 import com.gruelbox.transactionoutbox.DefaultPersistor;

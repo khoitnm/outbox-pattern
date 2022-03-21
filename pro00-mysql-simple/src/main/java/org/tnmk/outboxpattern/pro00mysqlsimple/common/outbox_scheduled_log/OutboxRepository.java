@@ -1,4 +1,4 @@
-package org.tnmk.outboxpattern.pro00mysqlsimple.samplebusiness.outboxtracking;
+package org.tnmk.outboxpattern.pro00mysqlsimple.common.outbox_scheduled_log;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;

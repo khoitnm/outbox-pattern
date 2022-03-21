@@ -1,6 +1,5 @@
 package org.tnmk.outboxpattern.pro00mysqlsimple.samplebusiness.service;
 
-import com.gruelbox.transactionoutbox.TransactionOutbox;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,7 +21,7 @@ public class SampleOutboxConsumer {
   @Transactional
   public SampleEntity updateFail(SampleEntity sampleEvent) {
     SampleEntity result = update(sampleEvent);
-    ExceptionUtils.throwAnException();
+    ExceptionHelper.throwAnException();
     return result;
   }
 

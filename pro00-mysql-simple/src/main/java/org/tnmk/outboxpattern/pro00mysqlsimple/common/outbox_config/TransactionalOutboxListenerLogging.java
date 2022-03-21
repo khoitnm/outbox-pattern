@@ -1,6 +1,5 @@
-package org.tnmk.outboxpattern.pro00mysqlsimple.common.transactionaloutbox;
+package org.tnmk.outboxpattern.pro00mysqlsimple.common.outbox_config;
 
-import com.gruelbox.transactionoutbox.TransactionOutbox;
 import com.gruelbox.transactionoutbox.TransactionOutboxEntry;
 import com.gruelbox.transactionoutbox.TransactionOutboxListener;
 import lombok.RequiredArgsConstructor;

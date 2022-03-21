@@ -1,4 +1,4 @@
-package org.tnmk.outboxpattern.pro00mysqlsimple.common.transactionaloutbox;
+package org.tnmk.outboxpattern.pro00mysqlsimple.common.outbox_config;
 
 import com.gruelbox.transactionoutbox.Submitter;
 import com.gruelbox.transactionoutbox.TransactionOutboxEntry;

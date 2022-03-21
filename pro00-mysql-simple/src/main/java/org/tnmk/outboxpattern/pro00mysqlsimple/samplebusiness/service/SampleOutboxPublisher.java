@@ -13,7 +13,7 @@ import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.tnmk.outboxpattern.pro00mysqlsimple.samplebusiness.service.ExceptionUtils.throwAnException;
+import static org.tnmk.outboxpattern.pro00mysqlsimple.samplebusiness.service.ExceptionHelper.throwAnException;
 
 @Service
 @RequiredArgsConstructor
