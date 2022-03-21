@@ -4,8 +4,11 @@ import com.gruelbox.transactionoutbox.Submitter;
 import com.gruelbox.transactionoutbox.TransactionOutboxEntry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jboss.logging.MDC;
 import org.springframework.stereotype.Component;
 import org.tnmk.outboxpattern.pro00mysqlsimple.common.outbox.OutboxRepository;
+import org.tnmk.outboxpattern.pro00mysqlsimple.common.utils.MdcUtils;
+import org.tnmk.outboxpattern.pro00mysqlsimple.samplebusiness.service.MdcConstant;
 
 import java.util.function.Consumer;
 
@@ -17,9 +20,21 @@ public class TransactionalOutboxSubmitter implements Submitter {
   private final OutboxRepository outboxRepository;
 
   @Override public void submit(TransactionOutboxEntry entry, Consumer<TransactionOutboxEntry> consumer) {
-    log.info("OutboxSubmitter.submit(): start {}", entry);
-    consumer.accept(entry);
+    try {
+      addEntryIdToMdcContext(entry);
+      log.info("OutboxSubmitter.submit(): start {}", entry);
+      consumer.accept(entry);
 
+      removeEntryIfSucceed(entry);
+
+      log.info("OutboxSubmitter.submit(): end {}", entry);
+    } finally {
+      removeEntryIdFromMdcContext();
+    }
+
+  }
+
+  private void removeEntryIfSucceed(TransactionOutboxEntry entry) {
     // Only delete if success. Otherwise, just keep outbox entry so that it could be retried.
     if (entry.isProcessed()) {
       try {
@@ -31,7 +46,19 @@ public class TransactionalOutboxSubmitter implements Submitter {
             + "Root cause: {}", entry.getId(), ex.getMessage(), ex);
       }
     }
-    log.info("OutboxSubmitter.submit(): end {}", entry);
+  }
 
+  private void addEntryIdToMdcContext(TransactionOutboxEntry entry) {
+    MdcUtils.putValueIfNotBlank(MdcConstant.OUTBOX_ID, entry.getId());
+    MdcUtils.putValueIfNotBlank(MdcConstant.OUTBOX_UNIQUE_REQUEST_ID, entry.getUniqueRequestId());
+    MdcUtils.putValueIfNotBlank(MdcConstant.OUTBOX_CLASS, entry.getInvocation().getClassName());
+    MdcUtils.putValueIfNotBlank(MdcConstant.OUTBOX_METHOD, entry.getInvocation().getMethodName());
+  }
+
+  private void removeEntryIdFromMdcContext() {
+    MDC.remove(MdcConstant.OUTBOX_UNIQUE_REQUEST_ID);
+    MDC.remove(MdcConstant.OUTBOX_ID);
+    MDC.remove(MdcConstant.OUTBOX_CLASS);
+    MDC.remove(MdcConstant.OUTBOX_METHOD);
   }
 }
