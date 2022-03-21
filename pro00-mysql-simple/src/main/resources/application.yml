@@ -23,11 +23,5 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: update
-  sql:
-    init:
-      #The platform for DDL or DML scripts (it's all by default)
-      platform: mysql
 
-      #Account for running schema scripts
-      username: root
-      password: root
+
