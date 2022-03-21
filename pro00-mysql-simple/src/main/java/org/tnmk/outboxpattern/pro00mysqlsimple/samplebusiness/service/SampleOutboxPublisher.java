@@ -34,7 +34,7 @@ public class SampleOutboxPublisher {
 
     SampleEntity sampleEventResult = transactionOutbox.with()
         .uniqueRequestId(outboxUniqueId)
-        .schedule(SampleOutboxConsumer.class)
+        .schedule(SampleOutboxConsumerJob.class)
         .updateSuccess(sampleEntityResult);
 
     List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
@@ -54,7 +54,7 @@ public class SampleOutboxPublisher {
 
     SampleEntity sampleEventResult = transactionOutbox.with()
         .uniqueRequestId(outboxUniqueId)
-        .schedule(SampleOutboxConsumer.class)
+        .schedule(SampleOutboxConsumerJob.class)
         .updateSuccess(sampleEntityResult);
 
     List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
@@ -75,7 +75,7 @@ public class SampleOutboxPublisher {
 
     SampleEntity sampleEventResult = transactionOutbox.with()
         .uniqueRequestId(outboxUniqueId)
-        .schedule(SampleOutboxConsumer.class)
+        .schedule(SampleOutboxConsumerJob.class)
         .updateFail(sampleEntityResult);
 
     List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
@@ -94,7 +94,7 @@ public class SampleOutboxPublisher {
     log.info("outboxSuccess - start event: {}", sampleEntityResult);
 
     SampleEntity sampleEventResult = transactionOutbox.with()
-        .schedule(SampleOutboxConsumer.class)
+        .schedule(SampleOutboxConsumerJob.class)
         .updateSuccess(sampleEntityResult);
 
     List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
@@ -113,7 +113,7 @@ public class SampleOutboxPublisher {
     log.info("outboxFail - start event: {}", sampleEntityResult);
 
     SampleEntity sampleEventResult = transactionOutbox.with()
-        .schedule(SampleOutboxConsumer.class)
+        .schedule(SampleOutboxConsumerJob.class)
         .updateSuccess(sampleEntityResult);
 
     List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
@@ -132,7 +132,7 @@ public class SampleOutboxPublisher {
 
     log.info("outboxFail - start event: {}", sampleEntityResult);
     SampleEntity sampleEventResult = transactionOutbox.with()
-        .schedule(SampleOutboxConsumer.class)
+        .schedule(SampleOutboxConsumerJob.class)
         .updateFail(sampleEntityResult);
 
     List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
