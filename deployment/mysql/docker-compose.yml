@@ -2,13 +2,13 @@ version: '3'
 services:
   mysql:
     image: mysql:5.7
-    container_name: mysql_outbox_pattern
+    container_name: mysql_practice_transaction_outbox
     restart: always
     ports:
       - 3307:3306
     environment:
       - MYSQL_ROOT_HOST=%
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-root}
-      - MYSQL_DATABASE=${MYSQL_DATABASE:-outbox_pattern_db}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-practice_transaction_outbox_db}
       - MYSQL_USER=${MYSQL_USER:-user}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD:-user}

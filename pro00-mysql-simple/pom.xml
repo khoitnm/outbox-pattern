@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.tnmk.skeleton.outbox-pattern</groupId>
+    <groupId>org.tnmk.skeleton.practice-transaction-outbox</groupId>
     <artifactId>pro00-mysql-simple</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>

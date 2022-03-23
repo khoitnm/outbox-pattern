@@ -2,13 +2,13 @@
 spring:
   datasource:
     #The DB name cannot contains hyphen character "-", you should use underscore character "_".
-    url: jdbc:mysql://localhost:3307/outbox_pattern_db?useSSL=false
+    url: jdbc:mysql://localhost:3307/practice_transaction_outbox_db?useSSL=false
     username: user
     password: user
 
     #HikariCP: the connection pool framework: http://www.baeldung.com/hikaricp
     hikari:
-      pool-name: outbox_pattern_db
+      pool-name: practice_transaction_outbox_db
 
     driverClassName: com.mysql.cj.jdbc.Driver
   jpa:

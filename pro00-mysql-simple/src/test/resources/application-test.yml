@@ -1,5 +1,5 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3307/outbox_pattern_db?useSSL=false
+    url: jdbc:mysql://localhost:3307/practice_transaction_outbox_db?useSSL=false
     username: user
     password: user
