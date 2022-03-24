@@ -26,6 +26,7 @@ public class SampleOutboxPublisher {
   // Must have @Transactional. Otherwise, we'll get error "com.gruelbox.transactionoutbox.NoTransactionActiveException: null"
   @Transactional
   public List<SampleEntity> unique_allSuccess(String uniqueRequestId) {
+    MDC.put("business", "sample");
     String now = formatCurrentDateTime();
     SampleEntity sampleEntity = SampleEntityFactory.withName("Entity_" + now);
     log.info("uniqueOutboxSuccess - start entity: {}", sampleEntity);

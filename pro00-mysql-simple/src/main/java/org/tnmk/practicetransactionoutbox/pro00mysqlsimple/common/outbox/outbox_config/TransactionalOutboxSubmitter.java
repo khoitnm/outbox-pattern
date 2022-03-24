@@ -4,7 +4,7 @@ import com.gruelbox.transactionoutbox.Submitter;
 import com.gruelbox.transactionoutbox.TransactionOutboxEntry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jboss.logging.MDC;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.tnmk.practicetransactionoutbox.pro00mysqlsimple.common.outbox.OutboxRepository;
 import org.tnmk.practicetransactionoutbox.pro00mysqlsimple.common.utils.MdcUtils;

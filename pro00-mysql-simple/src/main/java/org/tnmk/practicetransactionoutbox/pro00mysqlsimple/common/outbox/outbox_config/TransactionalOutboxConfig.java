@@ -57,7 +57,7 @@ public class TransactionalOutboxConfig {
         .dialect(Dialect.MY_SQL_5)
 
         // Disable automatic creation and migration of the outbox table, forcing the application to manage migrations itself.
-        .migrate(false)
+        .migrate(true)
         .serializer(DefaultInvocationSerializer.builder()
             .serializableTypes(Set.of(
                 UUID.class,
