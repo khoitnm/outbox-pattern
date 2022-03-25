@@ -10,28 +10,36 @@ import org.tnmk.practicetransactionoutbox.pro00mysqlsimple.common.outbox.OutboxR
 import org.tnmk.practicetransactionoutbox.pro00mysqlsimple.common.utils.MdcUtils;
 import org.tnmk.practicetransactionoutbox.pro00mysqlsimple.samplebusiness.service.MdcConstants;
 
+import java.util.concurrent.Executor;
 import java.util.function.Consumer;
+
+import static org.tnmk.practicetransactionoutbox.pro00mysqlsimple.common.outbox.outbox_config.OutboxMdcHelper.addEntryInfoToMdcContext;
+import static org.tnmk.practicetransactionoutbox.pro00mysqlsimple.common.outbox.outbox_config.OutboxMdcHelper.removeEntryIdFromMdcContext;
 
 @Component
 @Slf4j
 @RequiredArgsConstructor
 public class TransactionalOutboxSubmitter implements Submitter {
-
+  private final Executor taskScheduler;
   private final OutboxRepository outboxRepository;
 
   @Override public void submit(TransactionOutboxEntry entry, Consumer<TransactionOutboxEntry> consumer) {
-    try {
-      addEntryIdToMdcContext(entry);
-      log.info("OutboxSubmitter.submit(): start {}", entry);
-      consumer.accept(entry);
+    // Submit it in another thread.
+    // TODO do we really need to do this???
+    taskScheduler.execute(() -> {
+      try {
 
-      removeEntryIfSucceed(entry);
+        addEntryInfoToMdcContext(entry);
+        log.info("OutboxSubmitter.submit(): start {}", entry);
+        consumer.accept(entry);
 
-      log.info("OutboxSubmitter.submit(): end {}", entry);
-    } finally {
-      removeEntryIdFromMdcContext();
-    }
+        removeEntryIfSucceed(entry);
 
+        log.info("OutboxSubmitter.submit(): end {}", entry);
+      } finally {
+        removeEntryIdFromMdcContext();
+      }
+    });
   }
 
   private void removeEntryIfSucceed(TransactionOutboxEntry entry) {
@@ -48,17 +56,4 @@ public class TransactionalOutboxSubmitter implements Submitter {
     }
   }
 
-  private void addEntryIdToMdcContext(TransactionOutboxEntry entry) {
-    MdcUtils.putValueIfNotBlank(MdcConstants.OUTBOX_ID, entry.getId());
-    MdcUtils.putValueIfNotBlank(MdcConstants.OUTBOX_UNIQUE_REQUEST_ID, entry.getUniqueRequestId());
-    MdcUtils.putValueIfNotBlank(MdcConstants.OUTBOX_CLASS, entry.getInvocation().getClassName());
-    MdcUtils.putValueIfNotBlank(MdcConstants.OUTBOX_METHOD, entry.getInvocation().getMethodName());
-  }
-
-  private void removeEntryIdFromMdcContext() {
-    MDC.remove(MdcConstants.OUTBOX_UNIQUE_REQUEST_ID);
-    MDC.remove(MdcConstants.OUTBOX_ID);
-    MDC.remove(MdcConstants.OUTBOX_CLASS);
-    MDC.remove(MdcConstants.OUTBOX_METHOD);
-  }
 }

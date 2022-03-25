@@ -17,4 +17,5 @@ public interface MdcConstants {
    * @see #OUTBOX_ID  Please view "OutboxId" for more explanation about the difference.
    */
   String OUTBOX_UNIQUE_REQUEST_ID = "outbox_unique_request_id";
+  String THREAD = "thread";
 }

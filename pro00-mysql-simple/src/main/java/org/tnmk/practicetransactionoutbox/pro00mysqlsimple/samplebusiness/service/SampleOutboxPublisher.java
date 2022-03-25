@@ -3,7 +3,7 @@ package org.tnmk.practicetransactionoutbox.pro00mysqlsimple.samplebusiness.servi
 import com.gruelbox.transactionoutbox.TransactionOutbox;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jboss.logging.MDC;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 import org.tnmk.practicetransactionoutbox.pro00mysqlsimple.samplebusiness.datafactory.SampleEntityFactory;
 import org.tnmk.practicetransactionoutbox.pro00mysqlsimple.samplebusiness.entity.SampleEntity;
@@ -34,12 +34,12 @@ public class SampleOutboxPublisher {
 
     log.info("uniqueOutboxSuccess - start event: {}", sampleEntityResult);
 
-//    MDC.put(MDCConstants.OUTBOX_UNIQUE_REQUEST_ID, uniqueRequestId);
+    //    MDC.put(MDCConstants.OUTBOX_UNIQUE_REQUEST_ID, uniqueRequestId);
     SampleEntity sampleEventResult = transactionOutbox.with()
         .uniqueRequestId(uniqueRequestId)
         .schedule(SampleOutboxConsumerJob.class)
         .updateSuccess(sampleEntityResult);
-//    MDC.remove(MDCConstants.OUTBOX_UNIQUE_REQUEST_ID);
+    //    MDC.remove(MDCConstants.OUTBOX_UNIQUE_REQUEST_ID);
 
     List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
     log.info("uniqueOutboxSuccess - end: {}", result);
@@ -55,12 +55,12 @@ public class SampleOutboxPublisher {
     SampleEntity sampleEntityResult = sampleRepository.save(sampleEntity);
 
     log.info("uniqueOutboxFail - start event: {}", sampleEntityResult);
-//    MDC.put(MDCConstants.OUTBOX_UNIQUE_REQUEST_ID, uniqueRequestId);
+    //    MDC.put(MDCConstants.OUTBOX_UNIQUE_REQUEST_ID, uniqueRequestId);
     SampleEntity sampleEventResult = transactionOutbox.with()
         .uniqueRequestId(uniqueRequestId)
         .schedule(SampleOutboxConsumerJob.class)
         .updateSuccess(sampleEntityResult);
-//    MDC.remove(MDCConstants.OUTBOX_UNIQUE_REQUEST_ID);
+    //    MDC.remove(MDCConstants.OUTBOX_UNIQUE_REQUEST_ID);
 
     List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
     log.info("uniqueOutboxFail - end with an exception: {}", result);
@@ -77,12 +77,12 @@ public class SampleOutboxPublisher {
     SampleEntity sampleEntityResult = sampleRepository.save(sampleEntity);
 
     log.info("uniqueOutboxNestedEventFail - start event: {}", sampleEntityResult);
-//    MDC.put(MDCConstants.OUTBOX_UNIQUE_REQUEST_ID, uniqueRequestId);
+    //    MDC.put(MDCConstants.OUTBOX_UNIQUE_REQUEST_ID, uniqueRequestId);
     SampleEntity sampleEventResult = transactionOutbox.with()
         .uniqueRequestId(uniqueRequestId)
         .schedule(SampleOutboxConsumerJob.class)
         .updateFail(sampleEntityResult);
-//    MDC.remove(MDCConstants.OUTBOX_UNIQUE_REQUEST_ID);
+    //    MDC.remove(MDCConstants.OUTBOX_UNIQUE_REQUEST_ID);
 
     List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
     log.info("uniqueOutboxNestedEventFail - end: {}", result);
