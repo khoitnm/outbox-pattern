@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
+import org.tnmk.practicetransactionoutbox.pro00mysqlsimple.common.outbox.outbox_config.TransactionalOutboxPublisher;
 import org.tnmk.practicetransactionoutbox.pro00mysqlsimple.samplebusiness.datafactory.SampleEntityFactory;
 import org.tnmk.practicetransactionoutbox.pro00mysqlsimple.samplebusiness.entity.SampleEntity;
 import org.tnmk.practicetransactionoutbox.pro00mysqlsimple.samplebusiness.repository.SampleRepository;
@@ -20,13 +21,18 @@ import static org.tnmk.practicetransactionoutbox.pro00mysqlsimple.samplebusiness
 @RequiredArgsConstructor
 @Slf4j
 public class SampleOutboxPublisher {
+  private final TransactionalOutboxPublisher transactionalOutboxPublisher;
   private final TransactionOutbox transactionOutbox;
   private final SampleRepository sampleRepository;
 
   // Must have @Transactional. Otherwise, we'll get error "com.gruelbox.transactionoutbox.NoTransactionActiveException: null"
   @Transactional
-  public List<SampleEntity> unique_allSuccess(String uniqueRequestId) {
-    MDC.put("business", "sample");
+  public void unique_allSuccess(String uniqueRequestId) {
+    // if we have some MDC context here,
+    // it will copy them into the consumer job
+    // and override all MDCs that we set in submitter/listener.
+
+    MDC.put("business", "sample_success");
     String now = formatCurrentDateTime();
     SampleEntity sampleEntity = SampleEntityFactory.withName("Entity_" + now);
     log.info("uniqueOutboxSuccess - start entity: {}", sampleEntity);
@@ -35,20 +41,21 @@ public class SampleOutboxPublisher {
     log.info("uniqueOutboxSuccess - start event: {}", sampleEntityResult);
 
     //    MDC.put(MDCConstants.OUTBOX_UNIQUE_REQUEST_ID, uniqueRequestId);
-    SampleEntity sampleEventResult = transactionOutbox.with()
-        .uniqueRequestId(uniqueRequestId)
-        .schedule(SampleOutboxConsumerJob.class)
-        .updateSuccess(sampleEntityResult);
+    transactionalOutboxPublisher.withUniqueRequestId(uniqueRequestId, transactionOutbox -> {
+      transactionOutbox.schedule(SampleOutboxConsumerJob.class).updateSuccess(sampleEntityResult);
+    });
+//        .uniqueRequestId(uniqueRequestId)
+//        .schedule(SampleOutboxConsumerJob.class)
+//        .updateSuccess(sampleEntityResult);
     //    MDC.remove(MDCConstants.OUTBOX_UNIQUE_REQUEST_ID);
 
-    List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
-    log.info("uniqueOutboxSuccess - end: {}", result);
-    return result;
+//    List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
+    log.info("uniqueOutboxSuccess - end");
   }
 
   // Must have @Transactional. Otherwise, we'll get error "com.gruelbox.transactionoutbox.NoTransactionActiveException: null"
   @Transactional
-  public List<SampleEntity> unique_publishError(String uniqueRequestId) {
+  public void unique_publishError(String uniqueRequestId) {
     String now = formatCurrentDateTime();
     SampleEntity sampleEntity = SampleEntityFactory.withName("Entity_" + now);
     log.info("uniqueOutboxFail - start entity: {}", sampleEntity);
@@ -56,21 +63,20 @@ public class SampleOutboxPublisher {
 
     log.info("uniqueOutboxFail - start event: {}", sampleEntityResult);
     //    MDC.put(MDCConstants.OUTBOX_UNIQUE_REQUEST_ID, uniqueRequestId);
-    SampleEntity sampleEventResult = transactionOutbox.with()
-        .uniqueRequestId(uniqueRequestId)
-        .schedule(SampleOutboxConsumerJob.class)
-        .updateSuccess(sampleEntityResult);
+    transactionalOutboxPublisher.withUniqueRequestId(uniqueRequestId, transactionOutbox -> {
+      transactionOutbox.schedule(SampleOutboxConsumerJob.class).updateSuccess(sampleEntityResult);
+    });
     //    MDC.remove(MDCConstants.OUTBOX_UNIQUE_REQUEST_ID);
 
-    List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
-    log.info("uniqueOutboxFail - end with an exception: {}", result);
+    log.info("uniqueOutboxFail - end with an exception");
     throwAnException();
-    return result;
   }
 
   // Must have @Transactional. Otherwise, we'll get error "com.gruelbox.transactionoutbox.NoTransactionActiveException: null"
   @Transactional
-  public List<SampleEntity> unique_consumeError(String uniqueRequestId) {
+  public void unique_consumeError(String uniqueRequestId) {
+    MDC.put("business", "consumer_error");
+
     String now = formatCurrentDateTime();
     SampleEntity sampleEntity = SampleEntityFactory.withName("Entity_" + now);
     log.info("uniqueOutboxNestedEventFail - start entity: {}", sampleEntity);
@@ -78,15 +84,12 @@ public class SampleOutboxPublisher {
 
     log.info("uniqueOutboxNestedEventFail - start event: {}", sampleEntityResult);
     //    MDC.put(MDCConstants.OUTBOX_UNIQUE_REQUEST_ID, uniqueRequestId);
-    SampleEntity sampleEventResult = transactionOutbox.with()
-        .uniqueRequestId(uniqueRequestId)
-        .schedule(SampleOutboxConsumerJob.class)
-        .updateFail(sampleEntityResult);
+    transactionalOutboxPublisher.withUniqueRequestId(uniqueRequestId, transactionOutbox -> {
+      transactionOutbox.schedule(SampleOutboxConsumerJob.class).updateFail(sampleEntityResult);
+    });
     //    MDC.remove(MDCConstants.OUTBOX_UNIQUE_REQUEST_ID);
 
-    List<SampleEntity> result = Arrays.asList(sampleEntityResult, sampleEventResult);
-    log.info("uniqueOutboxNestedEventFail - end: {}", result);
-    return result;
+    log.info("uniqueOutboxNestedEventFail - end");
   }
 
   // Must have @Transactional. Otherwise, we'll get error "com.gruelbox.transactionoutbox.NoTransactionActiveException: null"

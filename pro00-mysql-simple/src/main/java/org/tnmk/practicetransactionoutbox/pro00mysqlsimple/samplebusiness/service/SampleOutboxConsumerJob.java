@@ -2,7 +2,6 @@ package org.tnmk.practicetransactionoutbox.pro00mysqlsimple.samplebusiness.servi
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 import org.tnmk.practicetransactionoutbox.pro00mysqlsimple.common.outbox.outbox_config.TransactionalOutboxBackgroundWorker;
 import org.tnmk.practicetransactionoutbox.pro00mysqlsimple.samplebusiness.entity.SampleEntity;
@@ -19,6 +18,7 @@ import javax.transaction.Transactional;
 @Slf4j
 public class SampleOutboxConsumerJob {
   private final SampleRepository sampleRepository;
+
   @Transactional
   public SampleEntity updateSuccess(SampleEntity sampleEvent) {
     return update(sampleEvent);
@@ -32,6 +32,9 @@ public class SampleOutboxConsumerJob {
   }
 
   private SampleEntity update(SampleEntity sampleEvent) {
+    //    String outboxId = TransactionalOutboxEntryContextHolder.getContext().getId();
+    //    MDC.put(MdcConstants.OUTBOX_ID, outboxId);
+
     log.info("OutboxConsumer: start {}", sampleEvent);
     if (sampleEvent.getId() == null || sampleEvent.getId() == 0) {
       throw new IllegalArgumentException("Cannot update an entity without Id");

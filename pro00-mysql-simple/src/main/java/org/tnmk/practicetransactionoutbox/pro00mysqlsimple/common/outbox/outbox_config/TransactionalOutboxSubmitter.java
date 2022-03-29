@@ -4,17 +4,14 @@ import com.gruelbox.transactionoutbox.Submitter;
 import com.gruelbox.transactionoutbox.TransactionOutboxEntry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.tnmk.practicetransactionoutbox.pro00mysqlsimple.common.outbox.OutboxRepository;
-import org.tnmk.practicetransactionoutbox.pro00mysqlsimple.common.utils.MdcUtils;
-import org.tnmk.practicetransactionoutbox.pro00mysqlsimple.samplebusiness.service.MdcConstants;
 
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
-import static org.tnmk.practicetransactionoutbox.pro00mysqlsimple.common.outbox.outbox_config.OutboxMdcHelper.addEntryInfoToMdcContext;
-import static org.tnmk.practicetransactionoutbox.pro00mysqlsimple.common.outbox.outbox_config.OutboxMdcHelper.removeEntryIdFromMdcContext;
+import static org.tnmk.practicetransactionoutbox.pro00mysqlsimple.common.outbox.outbox_config.TransactionalOutboxContextHelper.addEntryInfoToMdcContext;
+import static org.tnmk.practicetransactionoutbox.pro00mysqlsimple.common.outbox.outbox_config.TransactionalOutboxContextHelper.removeEntryIdFromMdcContext;
 
 @Component
 @Slf4j
@@ -24,22 +21,25 @@ public class TransactionalOutboxSubmitter implements Submitter {
   private final OutboxRepository outboxRepository;
 
   @Override public void submit(TransactionOutboxEntry entry, Consumer<TransactionOutboxEntry> consumer) {
+    log.info("OutboxSubmitter: start {}", entry);
     // Submit it in another thread.
     // TODO do we really need to do this???
     taskScheduler.execute(() -> {
       try {
 
         addEntryInfoToMdcContext(entry);
-        log.info("OutboxSubmitter.submit(): start {}", entry);
+        log.info("OutboxSubmitter.taskScheduler.start: before accept entry start {}", entry);
         consumer.accept(entry);
 
         removeEntryIfSucceed(entry);
 
-        log.info("OutboxSubmitter.submit(): end {}", entry);
+        log.info("OutboxSubmitter.taskScheduler.end: after accept entry start {}", entry);
       } finally {
         removeEntryIdFromMdcContext();
       }
     });
+    log.info("OutboxSubmitter: end {}", entry);
+
   }
 
   private void removeEntryIfSucceed(TransactionOutboxEntry entry) {

@@ -6,9 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import static org.tnmk.practicetransactionoutbox.pro00mysqlsimple.common.outbox.outbox_config.OutboxMdcHelper.addEntryInfoToMdcContext;
-import static org.tnmk.practicetransactionoutbox.pro00mysqlsimple.common.outbox.outbox_config.OutboxMdcHelper.removeEntryIdFromMdcContext;
-
 @Slf4j
 @Component
 @RequiredArgsConstructor

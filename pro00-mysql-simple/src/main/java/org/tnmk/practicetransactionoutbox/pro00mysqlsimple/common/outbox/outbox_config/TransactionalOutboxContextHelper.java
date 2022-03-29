@@ -2,14 +2,15 @@ package org.tnmk.practicetransactionoutbox.pro00mysqlsimple.common.outbox.outbox
 
 import com.gruelbox.transactionoutbox.TransactionOutboxEntry;
 import org.slf4j.MDC;
+import org.tnmk.practicetransactionoutbox.pro00mysqlsimple.common.outbox.outbox_context.TransactionalOutboxEntryContextHolder;
 import org.tnmk.practicetransactionoutbox.pro00mysqlsimple.common.utils.MdcUtils;
 import org.tnmk.practicetransactionoutbox.pro00mysqlsimple.samplebusiness.service.MdcConstants;
 
-public class OutboxMdcHelper {
+public class TransactionalOutboxContextHelper {
 
   public static void addEntryInfoToMdcContext(TransactionOutboxEntry entry) {
-    Thread thread = Thread.currentThread();
-    MDC.put(MdcConstants.THREAD, thread.getId() + "-"+thread.getName());
+    TransactionalOutboxEntryContextHolder.setContext(entry);
+
     MdcUtils.putValueIfNotBlank(MdcConstants.OUTBOX_ID, entry.getId());
     MdcUtils.putValueIfNotBlank(MdcConstants.OUTBOX_UNIQUE_REQUEST_ID, entry.getUniqueRequestId());
     MdcUtils.putValueIfNotBlank(MdcConstants.OUTBOX_CLASS, entry.getInvocation().getClassName());
@@ -17,6 +18,8 @@ public class OutboxMdcHelper {
   }
 
   public static void removeEntryIdFromMdcContext() {
+    TransactionalOutboxEntryContextHolder.clearContext();
+
     MDC.remove(MdcConstants.OUTBOX_UNIQUE_REQUEST_ID);
     MDC.remove(MdcConstants.OUTBOX_ID);
     MDC.remove(MdcConstants.OUTBOX_CLASS);

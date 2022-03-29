@@ -52,11 +52,11 @@ public class TransactionalOutboxConfig {
 
   @Bean
   public Persistor transactionOutboxPersistor() {
-    return DefaultPersistor.builder()
+    Persistor persistor = TransactionalOutboxPersistor.builder()
         // This config must match with Dialect config in application.yml: `hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect`
         .dialect(Dialect.MY_SQL_5)
 
-        // Disable automatic creation and migration of the outbox table, forcing the application to manage migrations itself.
+//        // Disable automatic creation and migration of the outbox table, forcing the application to manage migrations itself.
         .migrate(true)
         .serializer(DefaultInvocationSerializer.builder()
             .serializableTypes(Set.of(
@@ -67,5 +67,6 @@ public class TransactionalOutboxConfig {
             .build())
         .writeLockTimeoutSeconds(1)
         .build();
+    return persistor;
   }
 }
